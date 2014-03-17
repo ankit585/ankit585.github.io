@@ -318,7 +318,7 @@ function PlayState() {
         if (door_rotating == 1) {
             var o = rotating_fence[0];
             //console.log("Found new fence:" + o);
-            if((o.rotate == 0|| o.rotate == 1) && o.wait == 0) {
+            if((o.rotate == 0|| o.rotate == 1|| o.rotate == -1) && o.wait == 0) {
                 rotating_fence.pop();
                 door_rotating = 0;
             }
@@ -327,19 +327,19 @@ function PlayState() {
                 o.wait = 0;
             }
             if (o.wait >= 0) {
-                if (o.rotate > 0) {
-                    o.fence.rotate(1);
-                    o.rotate = o.rotate -1;
+                if (o.rotate >= 1) {
+                    o.fence.rotate(3);
+                    o.rotate = o.rotate -3;
                 }
-                if (o.rotate < 0) {
-                    o.fence.rotate(-1);
-                    o.rotate = o.rotate +1;
+                if (o.rotate <= -1) {
+                    o.fence.rotate(-3);
+                    o.rotate = o.rotate +3;
                 }
 
             }
             if (o.rotate == 0)
-            {
-                o.wait = o.wait -1;
+            { if (o.wait >=2)
+                o.wait = o.wait -2;
             }
 
         }
@@ -356,7 +356,7 @@ function PlayState() {
                 if ((x > f.x && x < (f.x + f.width)) && (y > f.y && y < (f.y + f.height) )) {
 
                     if (door_rotating == 0) {
-                    var ob = {fence:f,rotate:-90,wait:100};
+                    var ob = {fence:f,rotate:-90,wait:50};
                     this.shift_animals(fence_coord[f]);
                     rotating_fence.push(ob);
                     door_rotating = 1;
@@ -424,7 +424,7 @@ function Food(type,row,column) {
     var move_x = 0;
     var move_y = 0;
     this.energy  = 100;
-    this.spend = 0.005;
+    this.spend = 0.025;
     this.active = 1;
     this.image = "";
     this.auk = -1;
@@ -490,15 +490,23 @@ function Food(type,row,column) {
                 //this.setImage(this.anim_default.next());
                 move_x--;
                 this.x++;
+                move_x--;
+                this.x++;
             } else if (move_x < 0){
                // this.setImage(this.anim_up.next());
+                move_x++;
+                this.x--;
                 move_x++;
                 this.x--;
             }
             if (move_y > 0) {
                 move_y--;
                 this.y++;
+                move_y--;
+                this.y++;
             } else if (move_y < 0){
+                move_y++;
+                this.y--;
                 move_y++;
                 this.y--;
             }
@@ -518,7 +526,7 @@ function Food(type,row,column) {
     this.cellrow =  row;
     this.cellcolumn = column;
     this.energy  = 100*Math.random();
-    this.spend = 0.005;
+    this.spend = 0.01;
     this.active = 1;
     this.alive = 1;
     this.auk = auk;
@@ -611,10 +619,14 @@ function Food(type,row,column) {
            if (move_x > 0) {
                this.setImage(this.anim_default.next());
                move_x--;
+               move_x--;
+               this.x++;
                this.x++;
            } else if (move_x < 0){
                this.setImage(this.anim_up.next());
                move_x++;
+               move_x++;
+               this.x--;
                this.x--;
            }
            if (move_y > 0) {
